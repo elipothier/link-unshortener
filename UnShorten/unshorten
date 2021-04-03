@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+
+from unshortenit import UnshortenIt
+from unshortenit import exceptions as ue
+from requests import exceptions
+from sys import argv
+
+def ShowHelp():
+    print('URL Shortener')
+    print('')
+    print('Options:')
+    print('-h, --help (Displays this help menu)')
+    print('-u [LINK] (Runs the program)')
+    print('')
+    print('Usage:')
+    print('unshorten -u [LINK]')
+    print('unshorten -h')
+    print('')
+    print('Example:')
+    print('unshorten -u www.google.com')
+    print('unshorten -h')
+    print('')
+    exit()
+
+def ShortenLink(link):
+    try:
+        unshortener= UnshortenIt()
+        uri = unshortener.unshorten(link)
+        
+        result = f'Success! Your new unshortened URL is {uri}'
+    except ue.NotFound:
+        result = 'Your URL returned a 404 status code'
+    except ue.UnshortenFailed:
+        result = 'Something happened during the unshorting process. Maybe try again later?'
+    except exceptions.MissingSchema as e:
+        result = e
+    print(result)
+if len(argv) == 1:
+    ShowHelp()
+if argv[1] in ('-h', '--help'):
+    ShowHelp()
+elif argv[1] == '-u':
+    link = argv[2]
+    ShortenLink(link)
+    
+
